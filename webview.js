@@ -30,17 +30,15 @@ window.addEventListener('beforeunload', async () => {
 });
 
 module.exports = (Franz) => {
+  const title = document.querySelector('title');
   const getMessages = function getMessages() {
-    const elements = document.querySelectorAll('.CxUIE, .unread, ._0LqQ');
-    let count = 0;
-
-    for (let i = 0; i < elements.length; i += 1) {
-      if (elements[i].querySelectorAll('*[data-icon="muted"]').length === 0) {
-        count += 1;
-      }
+    const match = /^\((\d+)\) WhatsApp/gm.exec(title.innerText)
+    if(match){
+      Frant.setBadge(parseInt(match[1]))
+    }else{
+      console.warn("Couldn't parse badge count from title.")
+      Franz.setBadge(0);
     }
-
-    Franz.setBadge(count);
   };
 
   Franz.injectCSS(path.join(__dirname, 'service.css'));
